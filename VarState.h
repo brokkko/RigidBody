@@ -5,11 +5,11 @@
 
 struct VarState {
 	Vector particlePos;
-	Vector particleImpulse;  
+	Vector particleImpulse;
 	Matrix Rx, Ry, Rz;
-	Matrix R;              
+	Matrix R;
 	Matrix tensorInertia;
-	Vector angularMomentum; 
+	Vector angularMomentum;
 	float alpha1, alpha2, alpha3;
 	Matrix E;
 	double mass = 1;

@@ -1,4 +1,4 @@
-#include "RBody.h"
+п»ї#include "RBody.h"
 static bool check123 = false;
 
 RBody::RBody()
@@ -9,18 +9,18 @@ RBody::RBody()
 
 void RBody::initialization(RBody* body)
 {
-	body->localVertex.push_back({ 0+float(body->state.a)/2, 0, 0 + float(body->state.b) / 2 });
-	body->localVertex.push_back({ 0- float(body->state.a) /2, 0, 0 + float(body->state.b) / 2 });
+	body->localVertex.push_back({ 0 + float(body->state.a) / 2, 0, 0 + float(body->state.b) / 2 });
+	body->localVertex.push_back({ 0 - float(body->state.a) / 2, 0, 0 + float(body->state.b) / 2 });
 	body->localVertex.push_back({ 0 - float(body->state.a) / 2, 0, 0 - float(body->state.b) / 2 });
-	body->localVertex.push_back({ 0+ float(body->state.a) /2, 0, 0 - float(body->state.b) / 2 });
+	body->localVertex.push_back({ 0 + float(body->state.a) / 2, 0, 0 - float(body->state.b) / 2 });
 	body->localVertex.push_back({ 0, float(body->state.h), 0 });
-	
+
 	for (int i = 0; i < body->localVertex.size(); i++) {
-		body->centerOfMass = body->centerOfMass + body->localVertex[i]; 
+		body->centerOfMass = body->centerOfMass + body->localVertex[i];
 	}
 	body->centerOfMass.x = body->centerOfMass.x / 4;
 	body->centerOfMass.y = body->centerOfMass.y / 4;
-	body->centerOfMass.z = body->centerOfMass.z/4 + 1 / 4 * body->state.h;
+	body->centerOfMass.z = body->centerOfMass.z / 4 + 1 / 4 * body->state.h;
 	body->state.initialisation();
 	body->state.particlePos = body->centerOfMass;
 	lastLowest = { 0 };
@@ -33,16 +33,16 @@ Vector RBody::getParticleVelocity(Vector partical)
 	return state.R * state.E.vectorProduct(omega, r) + state.particleImpulse / mass;
 }
 
-Vector RBody::localToGlobal(Vector* localVertex)
+Vector RBody::localToGlobal(Vector localVertex)
 {
-	return state.particlePos + (state.R * (*localVertex - centerOfMass));
+	return state.particlePos + (state.R * (localVertex - centerOfMass));
 }
 
-Vector RBody::getTheLowestVertex(RBody* body)
+Vector RBody::getTheLowestVertex(/*RBody* body*/)
 {
-	Vector lowestVertex = body->centerOfMass;
-	for (auto i : body->localVertex) {
-		if (body->localToGlobal(&i).y < body->localToGlobal(&lowestVertex).y ) {
+	Vector lowestVertex = this->centerOfMass;
+	for (auto i : this->localVertex) {
+		if (this->localToGlobal(i).y < this->localToGlobal(lowestVertex).y) {
 			lowestVertex = i;
 		}
 	}
@@ -54,9 +54,9 @@ std::vector<Vector> RBody::findAllContactVertices(RBody* body) {
 	Vector vec = { 0, 1, 0 };
 
 	for (int i = 0; i < body->localVertex.size(); i++) {
-		double currentGlobalPos = body->localToGlobal(&body->localVertex[i]).y;
+		double currentGlobalPos = body->localToGlobal(body->localVertex[i]).y;
 		double relativeVel = state.E.scalarProduct(vec, body->getParticleVelocity(body->localVertex[i]));
-		if (relativeVel < 0 ) { 
+		if (relativeVel < 0) {
 			vertices.push_back(body->localVertex[i]);
 		}
 	}
@@ -65,7 +65,7 @@ std::vector<Vector> RBody::findAllContactVertices(RBody* body) {
 
 void RBody::checkCollision(RBody* body, Vector lastStepLowest, float h, float t)
 {
- 	collision(body);
+	collision(body);
 }
 
 void RBody::collision(RBody* body)
@@ -75,10 +75,10 @@ void RBody::collision(RBody* body)
 		Vector middle = { 0, 0, 0 };
 		for (int i = 0; i < touchVertex.size(); i++) {
 			middle = middle + touchVertex[i];
- 		}
+		}
 		middle = middle / touchVertex.size();
 		Vector normal = { 0, 1, 0 };
-		Vector r = body->localToGlobal(&middle) - body->localToGlobal(&centerOfMass);
+		Vector r = body->localToGlobal(middle) - body->localToGlobal(centerOfMass);
 		double relativeVel = body->getParticleVelocity(middle).y;
 
 		Vector omega = state.R * state.tensorInertia * state.R.TransponateMatrix(state.R) * state.angularMomentum;
@@ -97,7 +97,7 @@ void RBody::collision(RBody* body)
 VarState RBody::function(VarState body, float t)
 {
 	VarState dbody;
-	dbody.particlePos = body.particleImpulse/mass;
+	dbody.particlePos = body.particleImpulse / mass;
 	dbody.particleImpulse.x = 0;
 	dbody.particleImpulse.y = -g * mass;
 	dbody.particleImpulse.z = 0;
@@ -129,7 +129,7 @@ VarState RBody::oneFrame(RBody body, float h, float t)
 {
 	RBody current = body;
 	current.state = current.rungeKutta(current, h, t);
-	Vector lowest = current.localToGlobal(&current.getTheLowestVertex(&current));
+	Vector lowest = current.localToGlobal(current.getTheLowestVertex(/*&current*/));
 	// 1
 	if (lowest.y > 0.1) {
 		body.state = current.state;
@@ -141,13 +141,12 @@ VarState RBody::oneFrame(RBody body, float h, float t)
 		{
 			h = h / 2;
 			current.state = body.state;
-			lowest = current.localToGlobal(&current.getTheLowestVertex(&current));
+			lowest = current.localToGlobal(current.getTheLowestVertex(/*&current*/));
 			current.state = current.rungeKutta(current, h, t);
-			// нахожу новую нижную вершину
-			lowest = current.localToGlobal(&current.getTheLowestVertex(&current));
+			lowest = current.localToGlobal(current.getTheLowestVertex(/*&current*/));
 		}
-		lowest = current.localToGlobal(&current.getTheLowestVertex(&current));
-		//std::cout << "after while: " << lowest.y << std::endl;
+		lowest = current.localToGlobal(current.getTheLowestVertex(/*&current*/));
+		std::cout << "after while: " << lowest.y << std::endl;
 		//std::cout << std::endl;
 		if (lowest.y > 0.1) {
 			body.state = current.state;
@@ -162,6 +161,3 @@ VarState RBody::oneFrame(RBody body, float h, float t)
 
 	return body.state;
 }
-
-
-

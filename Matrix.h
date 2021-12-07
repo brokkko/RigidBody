@@ -1,6 +1,7 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
+#include <math.h>
 #include "Vector.h"
 
 class Matrix {
@@ -37,7 +38,7 @@ public:
                 delete[] matrix[i];
             }
             delete[] matrix;
-            
+
             matrix = new double* [3];
             for (int i = 0; i < 3; i++) {
                 matrix[i] = new double[3];

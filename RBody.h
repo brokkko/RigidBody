@@ -3,7 +3,7 @@
 #include "Vector.h"
 #include "VarState.h"
 
-class RBody  {
+class RBody {
 public:
 	std::vector<Vector> localVertex;
 	std::vector<Vector>::iterator it;
@@ -17,16 +17,16 @@ public:
 	Vector lastLowest;
 
 public:
-	 RBody();
-	 void initialization(RBody* body);
-	 Vector getParticleVelocity(Vector partical);
-	 Vector localToGlobal(Vector* localVerte);
-	 Vector getTheLowestVertex(RBody* body);
-	 std::vector<Vector> findAllContactVertices(RBody* body);
-	 void checkCollision(RBody* body, Vector lastLowesr, float h, float t);
-	 void collision(RBody* body);
+	RBody();
+	void initialization(RBody* body);
+	Vector getParticleVelocity(Vector partical);
+	Vector localToGlobal(Vector localVerte);
+	Vector getTheLowestVertex(/*RBody* body*/);
+	std::vector<Vector> findAllContactVertices(RBody* body);
+	void checkCollision(RBody* body, Vector lastLowesr, float h, float t);
+	void collision(RBody* body);
 
-	 VarState function(VarState body, float t);
-	 VarState rungeKutta(RBody body, float h, float t);
-	 VarState oneFrame(RBody body, float h, float t);
+	VarState function(VarState body, float t);
+	VarState rungeKutta(RBody body, float h, float t);
+	VarState oneFrame(RBody body, float h, float t);
 };

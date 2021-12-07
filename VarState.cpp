@@ -38,7 +38,7 @@ VarState operator*(float k, VarState b)
 	b.particlePos.y = k * b.particlePos.y;
 	b.particlePos.z = k * b.particlePos.z;
 
-	b.R = b.R * k + b.E;      
+	b.R = b.R * k + b.E;
 	return b;
 }
 
