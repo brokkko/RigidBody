@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClCompile Include="Matrixx.h" />
     <ClCompile Include="RBody.cpp" />
+    <ClCompile Include="RunSDL.cpp" />
     <ClCompile Include="RunSDL.h" />
     <ClCompile Include="VarState.cpp" />
     <ClCompile Include="Vector.cpp" />
