@@ -11,7 +11,7 @@ public:
 	float mass = 1;
 	const int countVertex = 5;
 	const float g = 9.81;
-
+	float max = 0.000001;
 	Vector centerOfMass;
 	VarState state;
 	Vector lastLowest;

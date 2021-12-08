@@ -127,6 +127,7 @@ VarState RBody::rungeKutta(RBody body, float h, float t)
 
 VarState RBody::oneFrame(RBody body, float h, float t)
 {
+	float saved_h = h;
 	RBody current = body;
 	current.state = current.rungeKutta(current, h, t);
 	Vector lowest = current.localToGlobal(current.getTheLowestVertex(/*&current*/));
@@ -141,13 +142,14 @@ VarState RBody::oneFrame(RBody body, float h, float t)
 		{
 			h = h / 2;
 			current.state = body.state;
-			lowest = current.localToGlobal(current.getTheLowestVertex(/*&current*/));
+			lowest = current.localToGlobal(current.getTheLowestVertex());
 			current.state = current.rungeKutta(current, h, t);
-			lowest = current.localToGlobal(current.getTheLowestVertex(/*&current*/));
+			lowest = current.localToGlobal(current.getTheLowestVertex());
+			if (h < max) {
+				body.state = body.rungeKutta(body, saved_h, t);
+			}
 		}
-		lowest = current.localToGlobal(current.getTheLowestVertex(/*&current*/));
-		std::cout << "after while: " << lowest.y << std::endl;
-		//std::cout << std::endl;
+		lowest = current.localToGlobal(current.getTheLowestVertex());
 		if (lowest.y > 0.1) {
 			body.state = current.state;
 			return body.state;
