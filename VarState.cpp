@@ -94,6 +94,7 @@ void VarState::initialisation()
 	alpha3 = (1 * 3.14) / 180;
 	initR();
 	angularMomentum = { 0.1, 0.13, 0.036 };
+	//angularMomentum = { 0, 0, 0 }; 
 	tensorInertia = tensorInertia;
 }
 

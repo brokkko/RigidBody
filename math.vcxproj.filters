@@ -36,6 +36,9 @@
     <ClCompile Include="RunSDL.h">
       <Filter>Файлы заголовков\project</Filter>
     </ClCompile>
+    <ClCompile Include="RunSDL.cpp">
+      <Filter>Исходные файлы\project</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
