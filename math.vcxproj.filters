@@ -30,12 +30,6 @@
     <ClCompile Include="VarState.cpp">
       <Filter>Исходные файлы\project</Filter>
     </ClCompile>
-    <ClCompile Include="Matrixx.h">
-      <Filter>Файлы заголовков\project</Filter>
-    </ClCompile>
-    <ClCompile Include="RunSDL.h">
-      <Filter>Файлы заголовков\project</Filter>
-    </ClCompile>
     <ClCompile Include="RunSDL.cpp">
       <Filter>Исходные файлы\project</Filter>
     </ClCompile>

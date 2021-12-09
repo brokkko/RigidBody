@@ -133,7 +133,10 @@ public:
     }
 
     double scalarProduct(Vector a, Vector b) {
-        double res = a.x * b.x + a.y * b.y + a.z * b.z;
+        double res1 = double(a.x) * double(b.x);
+        double res2 = double(a.y) * double(b.y);
+        double res3 = double(a.z) * double(b.z);
+        double res = res1 + res2 + res3;
         return res;
     }
 
@@ -170,6 +173,13 @@ public:
                 std::cout << a.matrix[i][j] << " ";
             std::cout << std::endl;
         }
+    }
+
+    ~Matrix() {
+        for (size_t i = 0; i < 3; i++) {
+            delete[] matrix[i];
+        }
+        delete[] matrix;
     }
 
 };

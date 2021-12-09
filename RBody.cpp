@@ -9,11 +9,11 @@ RBody::RBody()
 
 void RBody::initialization(RBody* body)
 {
-	body->localVertex.push_back({ 0 + float(body->state.a) / 2, 0, 0 + float(body->state.b) / 2 });
-	body->localVertex.push_back({ 0 - float(body->state.a) / 2, 0, 0 + float(body->state.b) / 2 });
-	body->localVertex.push_back({ 0 - float(body->state.a) / 2, 0, 0 - float(body->state.b) / 2 });
-	body->localVertex.push_back({ 0 + float(body->state.a) / 2, 0, 0 - float(body->state.b) / 2 });
-	body->localVertex.push_back({ 0, float(body->state.h), 0 });
+	body->localVertex.push_back({ 0 + body->state.a / 2, 0, 0 + body->state.b / 2 });
+	body->localVertex.push_back({ 0 - body->state.a / 2, 0, 0 + body->state.b / 2 });
+	body->localVertex.push_back({ 0 - body->state.a / 2, 0, 0 - body->state.b / 2 });
+	body->localVertex.push_back({ 0 + body->state.a / 2, 0, 0 - body->state.b / 2 });
+	body->localVertex.push_back({ 0, body->state.h, 0 });
 
 	for (int i = 0; i < body->localVertex.size(); i++) {
 		body->centerOfMass = body->centerOfMass + body->localVertex[i];
@@ -52,17 +52,13 @@ Vector RBody::getTheLowestVertex()
 std::vector<Vector> RBody::findAllContactVertices(RBody* body) {
 	std::vector<Vector> vertices;
 	Vector vec = { 0, 1, 0 };
-	//std::cout << std::endl;
 	for (int i = 0; i < body->localVertex.size(); i++) {
 		double currentGlobalPos = body->localToGlobal(body->localVertex[i]).y;
 		double relativeVel = state.E.scalarProduct(vec, body->getParticleVelocity(body->localVertex[i]));
-		//std::cout << relativeVel << " " << currentGlobalPos << std::endl;
-		//if (relativeVel < 0 && body->getParticleVelocity(body->localVertex[i]).y < 0.01) {
 		if (relativeVel < 0 && currentGlobalPos < 0.01) {
 			vertices.push_back(body->localVertex[i]);
 		}
 	}
-	//std::cout << std::endl;
 	return vertices;
 }
 
@@ -74,8 +70,6 @@ void RBody::checkCollision(RBody* body, Vector lastStepLowest, float h, float t)
 void RBody::collision(RBody* body)
 {
 	std::vector<Vector> touchVertex = body->findAllContactVertices(body);
-	//std::cout << "impulse before: " << body->state.particleImpulse.y << std::endl;
-	std::cout << "num of vertecies: " << touchVertex.size() << std::endl;
 	if (touchVertex.size()) {
 		Vector middle = { 0, 0, 0 };
 		for (int i = 0; i < touchVertex.size(); i++) {
@@ -93,19 +87,17 @@ void RBody::collision(RBody* body)
 		double term2 = state.E.scalarProduct(normal, state.E.vectorProduct((Iinv * state.E.vectorProduct(r, normal)), r));
 		double j = numerator / (term1 + term2);
 		Vector force = j * normal;
-		//std::cout << "vel: " << body->getParticleVelocity(middle).y << std::endl;
 		body->state.particleImpulse = body->state.particleImpulse + force;
 		body->state.angularMomentum = body->state.angularMomentum + state.R.TransponateMatrix(body->state.R) * body->state.E.vectorProduct(r, force);
-		//std::cout << "vel after: " << body->getParticleVelocity(middle).y << std::endl;
 	}
 }
 
 VarState RBody::function(VarState body, float t)
 {
 	VarState dbody;
-	dbody.particlePos = body.particleImpulse / mass;
+	dbody.particlePos = body.particleImpulse / double(mass);
 	dbody.particleImpulse.x = 0;
-	dbody.particleImpulse.y = -g * mass;
+	dbody.particleImpulse.y = double(-g) * double(mass);
 	dbody.particleImpulse.z = 0;
 
 	Vector omega = body.tensorInertia * body.angularMomentum;
@@ -135,11 +127,8 @@ VarState RBody::oneFrame(RBody body, float h, float t)
 {
 	float saved_h = h;
 	RBody current = body;
-	Vector lowestBody = body.localToGlobal(body.getTheLowestVertex());
 	current.state = current.rungeKutta(current, h, t);
-	Vector lowest = current.localToGlobal(current.getTheLowestVertex());	// В ЛОКАЛЬНЫХ ??
-	Vector lowest2 = current.getTheLowestVertex();
-	//std::cout << lowest.y << std::endl;
+	Vector lowest = current.localToGlobal(current.getTheLowestVertex());
 	// 1
 	if (lowest.y > 0.01) {
 		body.state = current.state;
@@ -147,36 +136,24 @@ VarState RBody::oneFrame(RBody body, float h, float t)
 	}
 	// 2
 	else if (lowest.y <= 0.01) {
-		std::cout << "third" << std::endl;
-		std::cout << "lowest point for body: " << lowestBody.y << std::endl;
-		std::cout << "lowest before: " << lowest.y << std::endl;
-		//std::cout <<"here : <<<<<<<<<<<<<<<<<<<<<<<" << current.getParticleVelocity(lowest2).y << " " << (-lowestBody.y+lowest.y)/h << std::endl;
 		while (std::abs(lowest.y) > 0.01)
 		{
-			//std::cout << getParticleVelocity(lowest).y << std::endl;
 			h = h / 2;
 			current.state = body.state;
 			lowest = current.localToGlobal(current.getTheLowestVertex());
 			current.state = current.rungeKutta(current, h, t);
 			lowest = current.localToGlobal(current.getTheLowestVertex());
-			//std::cout << lowest.y << std::endl;
 			if (lowest.y > 0) {
-				//std::cout << getParticleVelocity(lowest).y << " " << lowest.y << std::endl;
 				body.state = current.state;
 				h = saved_h;
 			}
-			std::cout << "lowest iter: " << lowest.y << std::endl;
 		}
-		std::cout << "yes!! -----------------------------------------" << std::endl;
-		std::cout << "lowest after: " << lowest.y << std::endl;
-		std::cout << "lowest vel: " << getParticleVelocity(lowest).y << std::endl;
- 		lowest = current.localToGlobal(current.getTheLowestVertex());
+		lowest = current.localToGlobal(current.getTheLowestVertex());
 		if (lowest.y > 0.01) {
-			std::cout << "after while: 1" << std::endl;
 			body.state = current.state;
 			return body.state;
 		}
-		else if (lowest.y < 0.01 && lowest.y > -0.01) {
+		else if (lowest.y < 0.01 && lowest.y >= -0.01) {
 			current.checkCollision(&current, lastLowest, h, t);
 			body.state = current.state;
 			return body.state;

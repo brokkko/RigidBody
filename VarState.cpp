@@ -10,7 +10,7 @@ VarState operator+(VarState a, VarState b)
 	a.particlePos.y += b.particlePos.y;
 	a.particlePos.z += b.particlePos.z;
 
-	a.R = b.R * a.R;
+	a.R = a.R * b.R ;
 
 	return a;
 }
@@ -90,11 +90,11 @@ void VarState::initialisation()
 {
 	VarState();
 	alpha1 = (2 * 3.14) / 180;
-	alpha2 = (2 * 3.14) / 180;
+	alpha2 = (1 * 3.14) / 180;
 	alpha3 = (1 * 3.14) / 180;
 	initR();
 	angularMomentum = { 0.1, 0.13, 0.036 };
-	//angularMomentum = { 0, 0, 0 }; 
+	//angularMomentum = { 0, 0, 0.2 }; 
 	tensorInertia = tensorInertia;
 }
 

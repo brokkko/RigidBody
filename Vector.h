@@ -2,9 +2,9 @@
 #include <vector>
 
 struct Vector {
-	float x;
-	float y;
-	float z;
+	double x;
+	double y;
+	double z;
 
 	friend Vector operator +(Vector a, Vector b);
 	friend Vector operator -(Vector a, Vector b);

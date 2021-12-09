@@ -10,7 +10,7 @@ struct VarState {
 	Matrix R;
 	Matrix tensorInertia;
 	Vector angularMomentum;
-	float alpha1, alpha2, alpha3;
+	double alpha1, alpha2, alpha3;
 	Matrix E;
 	double mass = 1;
 	double a = 1.0, b = 1.0, h = 2.0;

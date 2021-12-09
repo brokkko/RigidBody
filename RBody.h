@@ -11,7 +11,6 @@ public:
 	float mass = 1;
 	const int countVertex = 5;
 	const float g = 9.81;
-	float max = 0.000001;
 	Vector centerOfMass;
 	VarState state;
 	Vector lastLowest;
@@ -21,7 +20,7 @@ public:
 	void initialization(RBody* body);
 	Vector getParticleVelocity(Vector partical);
 	Vector localToGlobal(Vector localVerte);
-	Vector getTheLowestVertex(/*RBody* body*/);
+	Vector getTheLowestVertex();
 	std::vector<Vector> findAllContactVertices(RBody* body);
 	void checkCollision(RBody* body, Vector lastLowesr, float h, float t);
 	void collision(RBody* body);

@@ -143,7 +143,7 @@ int main(int argc, char* argv[]) {
 		draw(&body);
 
 		// обновляем экран
-		//SDL_Delay(15);
+		SDL_Delay(15);
 
 		glFlush();
 		SDL_GL_SwapWindow(window);
