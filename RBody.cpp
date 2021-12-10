@@ -1,5 +1,4 @@
 ﻿#include "RBody.h"
-static bool check123 = false;
 
 RBody::RBody()
 {
@@ -23,7 +22,6 @@ void RBody::initialization(RBody* body)
 	body->centerOfMass.z = body->centerOfMass.z / 4 + 1 / 4 * body->state.h;
 	body->state.initialisation();
 	body->state.particlePos = body->centerOfMass;
-	lastLowest = { 0 };
 }
 
 Vector RBody::getParticleVelocity(Vector partical)
@@ -62,7 +60,7 @@ std::vector<Vector> RBody::findAllContactVertices(RBody* body) {
 	return vertices;
 }
 
-void RBody::checkCollision(RBody* body, Vector lastStepLowest, float h, float t)
+void RBody::checkCollision(RBody* body, double h, double t)
 {
 	collision(body);
 }
@@ -92,12 +90,12 @@ void RBody::collision(RBody* body)
 	}
 }
 
-VarState RBody::function(VarState body, float t)
+VarState RBody::function(VarState body, double t)
 {
 	VarState dbody;
-	dbody.particlePos = body.particleImpulse / double(mass);
+	dbody.particlePos = body.particleImpulse / mass;
 	dbody.particleImpulse.x = 0;
-	dbody.particleImpulse.y = double(-g) * double(mass);
+	dbody.particleImpulse.y = -g * mass;
 	dbody.particleImpulse.z = 0;
 
 	Vector omega = body.tensorInertia * body.angularMomentum;
@@ -106,7 +104,7 @@ VarState RBody::function(VarState body, float t)
 	return dbody;
 }
 
-VarState RBody::rungeKutta(RBody body, float h, float t)
+VarState RBody::rungeKutta(RBody body, double h, double t)
 {
 	VarState k1, k2, k3, k4;
 	k1 = function(body.state, t);
@@ -123,9 +121,9 @@ VarState RBody::rungeKutta(RBody body, float h, float t)
 	return body.state;
 }
 
-VarState RBody::oneFrame(RBody body, float h, float t)
+VarState RBody::oneFrame(RBody body, double h, double t)
 {
-	float saved_h = h;
+	double saved_h = h;
 	RBody current = body;
 	current.state = current.rungeKutta(current, h, t);
 	Vector lowest = current.localToGlobal(current.getTheLowestVertex());
@@ -148,13 +146,14 @@ VarState RBody::oneFrame(RBody body, float h, float t)
 				h = saved_h;
 			}
 		}
-		lowest = current.localToGlobal(current.getTheLowestVertex());
+ 		lowest = current.localToGlobal(current.getTheLowestVertex());
 		if (lowest.y > 0.01) {
 			body.state = current.state;
 			return body.state;
 		}
 		else if (lowest.y < 0.01 && lowest.y >= -0.01) {
-			current.checkCollision(&current, lastLowest, h, t);
+			current.checkCollision(&current, h, t);
+			lowest = current.localToGlobal(current.getTheLowestVertex());
 			body.state = current.state;
 			return body.state;
 		}

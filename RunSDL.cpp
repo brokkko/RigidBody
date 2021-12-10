@@ -111,7 +111,7 @@ int main(int argc, char* argv[]) {
 
 	bool running = true;
 
-	float t = 0, dt = 0.01;
+	double t = 0, dt = 0.01;
 	RBody body;
 	body.initialization(&body);
 	body.state.particlePos.y = 10;

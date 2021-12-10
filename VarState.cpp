@@ -28,7 +28,7 @@ VarState operator-(VarState a, VarState b)
 	return a;
 }
 
-VarState operator*(float k, VarState b)
+VarState operator*(double k, VarState b)
 {
 	b.particleImpulse.x = k * b.particleImpulse.x;
 	b.particleImpulse.y = k * b.particleImpulse.y;
@@ -88,13 +88,11 @@ void VarState::initR()
 
 void VarState::initialisation()
 {
-	VarState();
 	alpha1 = (2 * 3.14) / 180;
 	alpha2 = (1 * 3.14) / 180;
 	alpha3 = (1 * 3.14) / 180;
 	initR();
 	angularMomentum = { 0.1, 0.13, 0.036 };
-	//angularMomentum = { 0, 0, 0.2 }; 
 	tensorInertia = tensorInertia;
 }
 

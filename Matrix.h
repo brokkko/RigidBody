@@ -71,7 +71,7 @@ public:
         return c;
     }
 
-    friend Matrix operator *(Matrix a, float k) {
+    friend Matrix operator *(Matrix a, double k) {
 
         Matrix c = Matrix();
         for (int i = 0; i < 3; i++)
