@@ -10,23 +10,23 @@ VarState operator+(VarState a, VarState b)
 	a.particlePos.y += b.particlePos.y;
 	a.particlePos.z += b.particlePos.z;
 
-	a.R = a.R * b.R ;
+	a.R = a.R + b.R;
 
 	return a;
 }
 
-VarState operator-(VarState a, VarState b)
-{
-	a.particleImpulse.x -= b.particleImpulse.x;
-	a.particleImpulse.y -= b.particleImpulse.y;
-	a.particleImpulse.z -= b.particleImpulse.z;
-
-	a.particlePos.x -= b.particlePos.x;
-	a.particlePos.y -= b.particlePos.y;
-	a.particlePos.z -= b.particlePos.z;
-
-	return a;
-}
+//VarState operator-(VarState a, VarState b)
+//{
+//	a.particleImpulse.x -= b.particleImpulse.x;
+//	a.particleImpulse.y -= b.particleImpulse.y;
+//	a.particleImpulse.z -= b.particleImpulse.z;
+//
+//	a.particlePos.x -= b.particlePos.x;
+//	a.particlePos.y -= b.particlePos.y;
+//	a.particlePos.z -= b.particlePos.z;
+//
+//	return a;
+//}
 
 VarState operator*(double k, VarState b)
 {
@@ -38,7 +38,7 @@ VarState operator*(double k, VarState b)
 	b.particlePos.y = k * b.particlePos.y;
 	b.particlePos.z = k * b.particlePos.z;
 
-	b.R = b.R * k + b.E;
+	b.R = b.R * k;
 	return b;
 }
 
@@ -77,7 +77,7 @@ void VarState::initR()
 	Rz.matrix[0][1] = -sin(alpha3);
 	Rz.matrix[0][2] = 0;
 	Rz.matrix[1][0] = sin(alpha3);
-	Rz.matrix[1][1] = sin(alpha3);
+	Rz.matrix[1][1] = cos(alpha3);
 	Rz.matrix[1][2] = 0;
 	Rz.matrix[2][0] = 0;
 	Rz.matrix[2][1] = 0;
@@ -92,7 +92,7 @@ void VarState::initialisation()
 	alpha2 = (1 * 3.14) / 180;
 	alpha3 = (1 * 3.14) / 180;
 	initR();
-	angularMomentum = { 0.1, 0.13, 0.036 };
+	angularMomentum = { 0.1, 0.13, 0.36 };
 	tensorInertia = tensorInertia;
 }
 

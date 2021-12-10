@@ -99,7 +99,7 @@ VarState RBody::function(VarState body, double t)
 	dbody.particleImpulse.z = 0;
 
 	Vector omega = body.tensorInertia * body.angularMomentum;
-	dbody.R = dbody.R.skewMatrix(omega);
+	dbody.R = body.R * dbody.R.skewMatrix(omega);
 
 	return dbody;
 }

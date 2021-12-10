@@ -21,7 +21,7 @@ struct VarState {
 	void initTensorInertia();
 	void initEMatrix();
 	friend VarState operator +(VarState a, VarState b);
-	friend VarState operator -(VarState a, VarState b);
+	//friend VarState operator -(VarState a, VarState b);
 	friend VarState operator *(double a, VarState b);
 	VarState& operator=(const VarState& other);
 };
